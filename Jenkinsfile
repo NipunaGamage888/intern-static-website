@@ -10,7 +10,7 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'AKIAXZRLVBGIO4MZDAOH') {
+                withAWS(region: 'us-east-1', credentials: 'intern_project') {
                     s3Upload(
                         bucket: 'intern-project-nippa-abi-001',
                         includePathPattern: '**/*.html',
