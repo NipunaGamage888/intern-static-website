@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/NipunaGamage888/intern-static-website'  
+                git branch:'main', url:'https://github.com/NipunaGamage888/intern-static-website'  
             }
         }
 
