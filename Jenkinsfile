@@ -4,13 +4,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-user/your-repo.git'  // Replace with your actual repo
+                git 'https://github.com/NipunaGamage888/intern-static-website'  
             }
         }
 
         stage('Deploy to S3') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                withAWS(region: 'us-east-1', credentials: 'AKIAXZRLVBGIO4MZDAOH') {
                     s3Upload(
                         bucket: 'intern-project-nippa-abi-001',
                         includePathPattern: '**/*.html',
