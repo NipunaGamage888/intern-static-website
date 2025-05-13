@@ -4,18 +4,22 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch:'main', url:'https://github.com/NipunaGamage888/intern-static-website'  
+                git branch: 'main', url: 'https://github.com/NipunaGamage888/intern-static-website'
             }
         }
 
-        stage('Deploy to S3') {
+        stage('Deploy to EC2') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'intern_project') {
-                    s3Upload(
-                        bucket: 'intern-project-nippa-abi-001',
-                        includePathPattern: '**/*.html',
-                        workingDir: '.'
-                    )
+                sshagent (credentials: ['ec2_ssh']) {
+                    sh '''
+                        echo "Copying files to EC2 instance..."
+                        scp -o StrictHostKeyChecking=no -r *.html ec2-user@<EC2_PUBLIC_IP>:/tmp/
+
+                        echo "Moving files to web root..."
+                        ssh -o StrictHostKeyChecking=no ec2-user@<EC2_PUBLIC_IP> '
+                            sudo mv /tmp/*.html /var/www/html/
+                        '
+                    '''
                 }
             }
         }
