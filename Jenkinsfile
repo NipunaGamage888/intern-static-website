@@ -1,26 +1,25 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/NipunaGamage888/intern-static-website'
+                git credentialsId: 'githubintern',
+                    url: 'https://github.com/NipunaGamage888/intern-static-website.git',
+                    branch: 'main'
             }
         }
 
         stage('Deploy to EC2') {
             steps {
-                sshagent (credentials: ['ec2_ssh']) {
-                    sh '''
-                        echo "Copying files to EC2 instance..."
-                        scp -o StrictHostKeyChecking=no -r *.html ec2-user@<EC2_PUBLIC_IP>:/tmp/
-
-                        echo "Moving files to web root..."
-                        ssh -o StrictHostKeyChecking=no ec2-user@<EC2_PUBLIC_IP> '
-                            sudo mv /tmp/*.html /var/www/html/
-                        '
-                    '''
-                }
+                sh '''
+                    echo "Deploying..."
+                    cp -r * /var/www/html/   # or wherever your web root is
+                '''
             }
         }
     }
